@@ -14,7 +14,7 @@ I first create the external library using bash:
     linux$ cmake -S external_lib/ -B external_lib/build/
     linux$ cmake --build external_lib/build/
 
-I find the shared library at `linux/external_lib/build/`. Now build the main program
+I find the shared library at `external_lib/build/`. Now build the main program
 
     linux$ cmake -S . -B build
     linux$ cmake --build build
@@ -27,7 +27,7 @@ We find the shared main program at `build/`.
 ## On MS Windows
 With the Microsoft Visual C Compiler (MSVC) external symbols are not exported by default. We explicitly have to do it with program decorators `__declspec(dllexport)` on symbols in the library (.dll) and with `__declspec(dllimport)` on symbols in the main program (.exe), means where the functions from the library are used. I create the external library using the PowerShell:
 
-    PS > cd ms-windows/  # This is the project source directory
+    PS > cd ms-windows\  # This is the project source directory
     PS ms-windows> cmake -S .\external_lib\ -B .\external_lib\build\
     PS ms-windows> cmake --build .\external_lib\build\ --config Release
 
@@ -36,7 +36,7 @@ I find the shared library (.dll and corresponding .lib) at `.\external_lib\build
     PS ms-windows> cmake -S . -B .\build\
     PS ms-windows> cmake --build .\build\ --config Release
 
-I find the shared main program at `.\build\Release\` and need to copy the .dll to the main program, otherwise the main program will not find its library. In this case the main program will terminate silently. If you do net get the greeting then look for the .dll:
+I find the shared main program at `.\build\Release\` and need to copy the .dll to the main program, otherwise the main program will not find its library. In this case the main program will terminate silently. If you do not get the greeting then look for the .dll:
 
     PS ms-windows> copy .\external_lib\build\Release\hello.dll .\build\Release\
     PS ms-windows> .\build\Release\main.exe
@@ -45,4 +45,4 @@ I find the shared main program at `.\build\Release\` and need to copy the .dll t
 ## On Multiplatform build
 We have to ensure that both configurations above are running with one cmake setup. The problem is the different behavior with symbol exports of the different compiler. GCC on Linux exports all symbols by default but MSVC on MS Windows does not and need decorators as already described. We solve this with a preprocessor makro as defined in `external_lib/hello.h` and triggered with a target_compile_definitions() in `external_lib/CMakeLists.txt`.
 
-Now we can use the commands as shown above for the respective platform with the same cmake multiplatform setup.
+Change to the subproject source directory `cd multiplatform`. Now we can use the commands as shown above for the respective platform with the same cmake multiplatform setup.
