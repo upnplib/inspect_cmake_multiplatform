@@ -1,5 +1,5 @@
 #include "hello.h"
 
-int main() {
+void main() {
     hello();
 }
